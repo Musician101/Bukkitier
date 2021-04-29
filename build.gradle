@@ -1,6 +1,7 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply from: project.rootDir.path + '/github.properties'
+plugins {
+    id 'java'
+    id 'maven'
+}
 
 group = 'io.musician101'
 version = '1.0'
@@ -23,24 +24,5 @@ repositories {
 dependencies {
     compile 'com.mojang:brigadier:1.0.17'
     compile 'com.google.code.findbugs:jsr305:3.0.1'
-    compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT'
-}
-
-publishing {
-    repositories {
-        maven {
-            name = 'GitHubPackages'
-            url = 'https://maven.pkg.github.com/Musician101/Bukkitier'
-            credentials {
-                username = project.ext.user == null ? "" : project.ext.user
-                password = project.ext.token == null ? "" : project.ext.token
-            }
-        }
-    }
-
-    publications {
-        gpr(MavenPublication) {
-            from components.java
-        }
-    }
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 }
