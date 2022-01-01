@@ -11,21 +11,23 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 repositories {
     mavenCentral()
     maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        name 'sonatype'
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
     }
     maven {
-        name = 'Minecraft'
-        url = 'https://libraries.minecraft.net/'
+        name 'spigotmc-repo'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
-    mavenLocal()
+    maven {
+        name 'Minecraft'
+        url 'https://libraries.minecraft.net/'
+    }
 }
 
 dependencies {
     compileOnly 'com.mojang:brigadier:1.0.18'
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
-    compileOnly 'org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT'
 }
 
 publishing {
