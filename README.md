@@ -12,6 +12,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.musician101:bukkitier:1.0'
+    implementation 'io.musician101:bukkitier:1.1'
 }
 ```
