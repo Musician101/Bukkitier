@@ -1,13 +1,12 @@
 plugins {
     id 'java'
-    id 'maven'
+    id 'maven-publish'
 }
 
 group = 'io.musician101'
-version = '1.0'
+version = '1.1'
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 repositories {
     mavenCentral()
@@ -19,10 +18,24 @@ repositories {
         name = 'Minecraft'
         url = 'https://libraries.minecraft.net/'
     }
+    mavenLocal()
 }
 
 dependencies {
-    compile 'com.mojang:brigadier:1.0.17'
-    compile 'com.google.code.findbugs:jsr305:3.0.1'
-    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'com.mojang:brigadier:1.0.18'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.musician101'
+            artifactId = 'bukkitier'
+            version = project.version
+
+            from components.java
+        }
+    }
 }
