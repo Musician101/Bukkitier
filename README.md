@@ -6,12 +6,12 @@ Use Mojang's Brigadier to create commands for your plugins.
 repositories {
     mavenCentral()
     maven {
-        name = 'GitHubPackages'
-        url = 'https://maven.pkg.github.com/Musician101/Bukkitier'
+        name = 'Jitpack.io'
+        url = 'https://jitpack.io'
     }
 }
 
 dependencies {
-    compile 'io.musician101:bukkitier:VERSION'
+    implementation 'io.musician101:bukkitier:1.0'
 }
 ```
