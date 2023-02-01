@@ -1,5 +1,6 @@
 package io.musician101.bukkitier.command;
 
+import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
@@ -12,13 +13,13 @@ import org.bukkit.entity.Player;
 /**
  * An interface that represents a simpler {@link CommandNode}
  */
-public interface Command {
+public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
 
     /**
      * @return A list of subcommands and arguments.
      */
     @Nonnull
-    default List<Command> arguments() {
+    default List<Command<? extends ArgumentBuilder<CommandSender, ?>>> arguments() {
         return Collections.emptyList();
     }
 
@@ -49,4 +50,9 @@ public interface Command {
     default List<String> aliases() {
         return Collections.emptyList();
     }
+
+    /**
+     * @return A Brigadier representation of the command.
+     */
+    B toBrigadier();
 }

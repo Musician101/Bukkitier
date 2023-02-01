@@ -3,14 +3,11 @@ package io.musician101.bukkitier;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import io.musician101.bukkitier.command.ArgumentCommand;
-import io.musician101.bukkitier.command.Command;
 import io.musician101.bukkitier.command.LiteralCommand;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,38 +29,21 @@ public final class Bukkitier {
 
     }
 
-    private static ArgumentBuilder<CommandSender, ?> toBrigadier(Command command) {
-        ArgumentBuilder<CommandSender, ?> builder;
-        if (command instanceof LiteralCommand lc) {
-            builder = literal(lc.literal());
-        }
-        else if (command instanceof ArgumentCommand<?> ac) {
-            builder = argument(ac.name(), ac.type());
-        }
-        else {
-            throw new UnsupportedOperationException(command.getClass() + " is not a supported interface of Command.class");
-        }
-
-        builder.executes(command::execute).requires(command::canUse);
-        command.arguments().forEach(c -> builder.then(toBrigadier(c)));
-        return builder;
-    }
-
     /**
      * Registers a command.
-     *
+     * <p>
      * The command must still be manually added to plugin.yml for this to work properly.
      *
      * @param plugin The {@link JavaPlugin} that the command is registered to.
      * @param command The {@link LiteralCommand} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}
      */
     public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralCommand command) {
-        registerCommand(plugin, (LiteralArgumentBuilder<CommandSender>) toBrigadier(command), command.aliases().toArray(new String[0]));
+        registerCommand(plugin, command.toBrigadier(), command.aliases().toArray(new String[0]));
     }
 
     /**
      * Registers a command.
-     *
+     * <p>
      * The command must still be manually added to plugin.yml for this to work properly.
      *
      * @param plugin The {@link JavaPlugin} that the command is registered to.
@@ -81,7 +61,7 @@ public final class Bukkitier {
         Arrays.stream(aliases).forEach(alias -> DISPATCHER.register(literal(alias).redirect(lcn)));
         pluginCommand.setExecutor((sender, command, label, args) -> {
             try {
-                return DISPATCHER.execute(Stream.concat(Stream.of(command.getName()), Stream.of(args)).collect(Collectors.joining(" ")), sender) > 0;
+                return DISPATCHER.execute(command.getName() + " " + String.join(" ", args), sender) > 0;
             }
             catch (CommandSyntaxException e) {
                 sender.sendMessage(ChatColor.RED + e.getMessage());
