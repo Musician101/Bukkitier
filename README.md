@@ -2,16 +2,26 @@
 
 Use Mojang's Brigadier to create commands for your plugins.
 
+Groovy:
 ```Groovy
 repositories {
-    mavenCentral()
     maven {
-        name = 'Jitpack.io'
         url = 'https://jitpack.io'
     }
 }
 
 dependencies {
-    implementation 'io.musician101:bukkitier:1.1'
+    implementation 'io.musician101:bukkitier:1.2'
+}
+```
+
+Kotlin DSL
+```Kotlin
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("io.musician101:bukkitier:1.2")
 }
 ```
