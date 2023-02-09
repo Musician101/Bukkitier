@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.musician101:bukkitier:1.2'
+    implementation 'com.github.musician101:bukkitier:1.2'
 }
 ```
 
@@ -22,6 +22,6 @@ repositories {
 }
 
 dependencies {
-    implementation("io.musician101:bukkitier:1.2")
+    api("com.github.musician101:bukkitier:1.2")
 }
 ```
