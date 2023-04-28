@@ -61,7 +61,8 @@ public final class Bukkitier {
         Arrays.stream(aliases).forEach(alias -> DISPATCHER.register(literal(alias).redirect(lcn)));
         pluginCommand.setExecutor((sender, command, label, args) -> {
             try {
-                return DISPATCHER.execute(command.getName() + " " + String.join(" ", args), sender) > 0;
+                String parsedArgs = args.length == 0 ? "" : " " + String.join(" ", args);
+                return DISPATCHER.execute(command.getName() + parsedArgs, sender) > 0;
             }
             catch (CommandSyntaxException e) {
                 sender.sendMessage(ChatColor.RED + e.getMessage());
