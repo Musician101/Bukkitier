@@ -12,8 +12,6 @@ import io.musician101.bukkitier.command.LiteralCommand;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -71,9 +69,10 @@ public final class Bukkitier {
         });
 
         pluginCommand.setTabCompleter((sender, command, alias, args) -> {
-            String rawCommand = Stream.concat(Stream.of(alias), Stream.of(args)).collect(Collectors.joining(" "));
-            ParseResults<CommandSender> parseResults = DISPATCHER.parse(rawCommand, sender);
             List<String> list = new ArrayList<>();
+            String parsedArgs = args.length == 0 ? "" : " " + String.join(" ", args);
+            String rawCommand = command.getName() + parsedArgs;
+            ParseResults<CommandSender> parseResults = DISPATCHER.parse(rawCommand, sender);
             DISPATCHER.getCompletionSuggestions(parseResults).thenAccept(suggestions -> suggestions.getList().stream().map(Suggestion::getText).forEach(list::add));
             return list;
         });
