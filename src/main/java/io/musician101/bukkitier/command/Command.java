@@ -4,9 +4,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,7 +20,7 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
      */
     @Nonnull
     default List<Command<? extends ArgumentBuilder<CommandSender, ?>>> arguments() {
-        return Collections.emptyList();
+        return List.of();
     }
 
     /**
@@ -33,26 +33,35 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
         return true;
     }
 
-    /**
-     *
-     * @param commandContext The {@link CommandContext<CommandSender>} for this command.
-     * @return An integer where anything greater than 0 is usually a successful run of the command.
-     * @throws CommandSyntaxException If an error during execution occurs.
-     */
-    default int execute(@Nonnull CommandContext<CommandSender> commandContext) throws CommandSyntaxException {
-        return 0;
+    @Nonnull
+    default String description() {
+        return "";
     }
 
     /**
-     * @return A list of aliases.
+     * @param context The {@link CommandContext <CommandSender>} for this command.
+     * @return An integer where anything greater than 0 is usually a successful run of the command.
+     * @throws CommandSyntaxException If an error during execution occurs.
+     */
+    default int execute(@Nonnull CommandContext<CommandSender> context) throws CommandSyntaxException {
+        CommandSender sender = context.getSource();
+        sender.sendMessage(ChatColor.RED + "Unknown or incomplete command, see below for error");
+        sender.sendMessage(context.getInput() + ChatColor.RED + "<--[HERE]");
+        return 1;
+    }
+
+    /**
+     * @return The name of the argument.
      */
     @Nonnull
-    default List<String> aliases() {
-        return Collections.emptyList();
-    }
+    String name();
 
     /**
      * @return A Brigadier representation of the command.
      */
+    @Nonnull
     B toBrigadier();
+
+    @Nonnull
+    String usage();
 }

@@ -12,11 +12,13 @@ import org.bukkit.command.CommandSender;
  */
 public interface ArgumentCommand<T> extends Command<RequiredArgumentBuilder<CommandSender, T>> {
 
-    /**
-     * @return The name of the argument.
-     */
     @Nonnull
-    String name();
+    @Override
+    default RequiredArgumentBuilder<CommandSender, T> toBrigadier() {
+        RequiredArgumentBuilder<CommandSender, T> builder = Bukkitier.argument(name(), type()).executes(this::execute).requires(this::canUse);
+        arguments().stream().map(Command::toBrigadier).forEach(builder::then);
+        return builder;
+    }
 
     /**
      * @return The object that will provide the parsing and tab completion.
@@ -24,10 +26,9 @@ public interface ArgumentCommand<T> extends Command<RequiredArgumentBuilder<Comm
     @Nonnull
     ArgumentType<T> type();
 
+    @Nonnull
     @Override
-    default RequiredArgumentBuilder<CommandSender, T> toBrigadier() {
-        RequiredArgumentBuilder<CommandSender, T> builder = Bukkitier.argument(name(), type()).executes(this::execute).requires(this::canUse);
-        arguments().stream().map(Command::toBrigadier).forEach(builder::then);
-        return builder;
+    default String usage() {
+        return "<" + name() + ">";
     }
 }

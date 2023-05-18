@@ -3,6 +3,7 @@
 Use Mojang's Brigadier to create commands for your plugins.
 
 Groovy:
+
 ```Groovy
 repositories {
     maven {
@@ -16,6 +17,7 @@ dependencies {
 ```
 
 Kotlin DSL
+
 ```Kotlin
 repositories {
     maven("https://jitpack.io")

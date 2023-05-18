@@ -7,7 +7,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.musician101.bukkitier.command.LiteralCommand;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,15 +27,24 @@ public final class Bukkitier {
     }
 
     /**
-     * Registers a command.
-     * <p>
-     * The command must still be manually added to plugin.yml for this to work properly.
+     * Helper method to create a new instance of {@link LiteralArgumentBuilder<CommandSender>}
      *
-     * @param plugin The {@link JavaPlugin} that the command is registered to.
-     * @param command The {@link LiteralCommand} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}
+     * @param <T>  The type that the argument returns.
+     * @param type The name of the command.
+     * @return New instance of {@link RequiredArgumentBuilder}
      */
-    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralCommand command) {
-        registerCommand(plugin, command.toBrigadier(), command.aliases().toArray(new String[0]));
+    public static <T> RequiredArgumentBuilder<CommandSender, T> argument(@Nonnull String name, @Nonnull ArgumentType<T> type) {
+        return RequiredArgumentBuilder.argument(name, type);
+    }
+
+    /**
+     * Helper method to create a new instance of {@link LiteralArgumentBuilder} with {@link CommandSender} as it's generic type
+     *
+     * @param name The name of the command.
+     * @return New instance of {@link LiteralArgumentBuilder}
+     */
+    public static LiteralArgumentBuilder<CommandSender> literal(@Nonnull String name) {
+        return LiteralArgumentBuilder.literal(name);
     }
 
     /**
@@ -44,19 +52,43 @@ public final class Bukkitier {
      * <p>
      * The command must still be manually added to plugin.yml for this to work properly.
      *
-     * @param plugin The {@link JavaPlugin} that the command is registered to.
+     * @param plugin  The {@link JavaPlugin} that the command is registered to.
+     * @param command The {@link LiteralCommand} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}
+     */
+    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralCommand command) {
+        registerCommand(plugin, command.toBrigadier());
+    }
+
+    /**
+     * Registers a command.
+     * <p>
+     * The command must still be manually added to plugin.yml for this to work properly.
+     *
+     * @param plugin  The {@link JavaPlugin} that the command is registered to.
      * @param builder The {@link LiteralArgumentBuilder<CommandSender>} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}.
      * @param aliases The aliases of the command, if any.
      */
     public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralArgumentBuilder<CommandSender> builder, @Nonnull String... aliases) {
+        registerCommand(plugin, builder, Arrays.asList(aliases));
+    }
+
+    /**
+     * Registers a command.
+     * <p>
+     * The command must still be manually added to plugin.yml for this to work properly.
+     *
+     * @param plugin  The {@link JavaPlugin} that the command is registered to.
+     * @param builder The {@link LiteralArgumentBuilder<CommandSender>} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}.
+     * @param aliases The aliases of the command, if any.
+     */
+    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralArgumentBuilder<CommandSender> builder, @Nonnull List<String> aliases) {
         PluginCommand pluginCommand = plugin.getCommand(builder.getLiteral());
         if (pluginCommand == null || !plugin.equals(pluginCommand.getPlugin())) {
             throw new NullPointerException(builder.getLiteral() + " is not registered in " + plugin.getName() + "'s plugin.yml");
         }
 
         DISPATCHER.register(builder);
-        LiteralCommandNode<CommandSender> lcn = builder.build();
-        Arrays.stream(aliases).forEach(alias -> DISPATCHER.register(literal(alias).redirect(lcn)));
+        pluginCommand.setAliases(aliases);
         pluginCommand.setExecutor((sender, command, label, args) -> {
             try {
                 String parsedArgs = args.length == 0 ? "" : " " + String.join(" ", args);
@@ -79,23 +111,28 @@ public final class Bukkitier {
     }
 
     /**
-     * Helper method to create a new instance of {@link LiteralArgumentBuilder} with {@link CommandSender} as it's generic type
+     * Registers a command.
+     * <p>
+     * The command must still be manually added to plugin.yml for this to work properly.
      *
-     * @param name The name of the command.
-     * @return New instance of {@link LiteralArgumentBuilder}
+     * @param plugin  The {@link JavaPlugin} that the command is registered to.
+     * @param command The {@link LiteralCommand} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}
+     * @param aliases The aliases for the command
      */
-    public static LiteralArgumentBuilder<CommandSender> literal(@Nonnull String name) {
-        return LiteralArgumentBuilder.literal(name);
+    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralCommand command, @Nonnull String... aliases) {
+        registerCommand(plugin, command.toBrigadier(), aliases);
     }
 
     /**
-     * Helper method to create a new instance of {@link LiteralArgumentBuilder<CommandSender>}
+     * Registers a command.
+     * <p>
+     * The command must still be manually added to plugin.yml for this to work properly.
      *
-     * @param <T> The type that the argument returns.
-     * @param type The name of the command.
-     * @return New instance of {@link RequiredArgumentBuilder}
+     * @param plugin  The {@link JavaPlugin} that the command is registered to.
+     * @param command The {@link LiteralCommand} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}
+     * @param aliases The aliases for the command
      */
-    public static <T> RequiredArgumentBuilder<CommandSender, T> argument(@Nonnull String name, @Nonnull ArgumentType<T> type) {
-        return RequiredArgumentBuilder.argument(name, type);
+    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralCommand command, @Nonnull List<String> aliases) {
+        registerCommand(plugin, command.toBrigadier(), aliases);
     }
 }
