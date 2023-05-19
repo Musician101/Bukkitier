@@ -62,6 +62,20 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
     @Nonnull
     B toBrigadier();
 
+    /**
+     * @return Usage of the command.
+     * @deprecated Will be removed in 1.4.0. Use {@link #usage(CommandSender)}
+     */
+    @Deprecated(since = "1.3.1", forRemoval = true)
     @Nonnull
     String usage();
+
+    /**
+     * @param sender The {@link CommandSender} for checking permissions based usages.
+     * @return Usage of the command.
+     */
+    @Nonnull
+    default String usage(CommandSender sender) {
+        return usage();
+    }
 }

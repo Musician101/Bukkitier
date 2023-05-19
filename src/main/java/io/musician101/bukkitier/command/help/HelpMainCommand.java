@@ -53,6 +53,7 @@ public final class HelpMainCommand extends AbstractHelpCommand {
         sendUsage(sender, this);
     }
 
+    @Deprecated(since = "1.3.1", forRemoval = true)
     @Nonnull
     @Override
     public String usage() {

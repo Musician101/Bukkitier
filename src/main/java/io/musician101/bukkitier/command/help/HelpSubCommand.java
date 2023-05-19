@@ -39,6 +39,7 @@ public final class HelpSubCommand extends AbstractHelpCommand {
         sendUsage(sender, root);
     }
 
+    @Deprecated(since = "1.3.1", forRemoval = true)
     @Nonnull
     @Override
     public String usage() {

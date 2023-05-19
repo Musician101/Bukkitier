@@ -36,7 +36,7 @@ abstract class AbstractHelpCommand implements LiteralCommand {
         command.arguments().forEach(c -> {
             try {
                 if (!c.getClass().getMethod("execute", CommandContext.class).getDeclaringClass().getName().equals(Command.class.getName())) {
-                    sender.sendMessage(c.usage() + " " + ChatColor.AQUA + c.description());
+                    sender.sendMessage(c.usage(sender) + " " + ChatColor.AQUA + c.description());
                 }
             }
             catch (NoSuchMethodException ignored) {
