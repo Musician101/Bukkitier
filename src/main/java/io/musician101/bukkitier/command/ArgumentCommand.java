@@ -26,10 +26,9 @@ public interface ArgumentCommand<T> extends Command<RequiredArgumentBuilder<Comm
     @Nonnull
     ArgumentType<T> type();
 
-    @Deprecated(since = "1.3.1", forRemoval = true)
     @Nonnull
     @Override
-    default String usage() {
+    default String usage(@Nonnull CommandSender sender) {
         return "<" + name() + ">";
     }
 }

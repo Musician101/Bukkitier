@@ -36,10 +36,9 @@ public interface LiteralCommand extends Command<LiteralArgumentBuilder<CommandSe
         return builder;
     }
 
-    @Deprecated(since = "1.3.1", forRemoval = true)
     @Nonnull
     @Override
-    default String usage() {
+    default String usage(@Nonnull CommandSender sender) {
         String usage = name();
         if (isRoot()) {
             return "/" + usage;
