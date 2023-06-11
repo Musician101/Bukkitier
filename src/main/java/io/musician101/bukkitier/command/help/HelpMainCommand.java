@@ -38,7 +38,7 @@ public abstract class HelpMainCommand extends AbstractHelpCommand {
         TextComponent cmd = new TextComponent(command.usage(sender));
         TextComponent dash = new TextComponent(" - ");
         dash.setColor(DARK_GRAY);
-        TextComponent description = new TextComponent(command.description());
+        TextComponent description = new TextComponent(command.description(sender));
         description.setColor(GRAY);
         cmd.addExtra(dash);
         cmd.addExtra(description);
@@ -48,7 +48,7 @@ public abstract class HelpMainCommand extends AbstractHelpCommand {
 
     @Nonnull
     @Override
-    public String description() {
+    public String description(@Nonnull CommandSender sender) {
         return "Displays help and plugin info.";
     }
 

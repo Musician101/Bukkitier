@@ -33,8 +33,14 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
         return true;
     }
 
+    /**
+     * A base description of the command/argument.
+     *
+     * @param sender The {@link CommandSender} receiving the description
+     * @return A description
+     */
     @Nonnull
-    default String description() {
+    default String description(@Nonnull CommandSender sender) {
         return "";
     }
 

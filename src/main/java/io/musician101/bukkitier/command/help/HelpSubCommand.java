@@ -61,7 +61,7 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
         TextComponent cmd = new TextComponent(command.usage(sender));
         TextComponent dash = new TextComponent("\n - ");
         dash.setColor(DARK_GRAY);
-        TextComponent description = new TextComponent(command.description());
+        TextComponent description = new TextComponent(command.description(sender));
         description.setColor(GRAY);
         cmd.addExtra(dash);
         cmd.addExtra(description);
@@ -74,7 +74,7 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
         TextComponent cmd = new TextComponent(command.usage(sender));
         TextComponent dash = new TextComponent(" - ");
         dash.setColor(DARK_GRAY);
-        TextComponent description = new TextComponent(command.description());
+        TextComponent description = new TextComponent(command.description(sender));
         description.setColor(GRAY);
         cmd.addExtra(dash);
         cmd.addExtra(description);
@@ -84,7 +84,7 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
 
     @Nonnull
     @Override
-    public String description() {
+    public String description(@Nonnull CommandSender sender) {
         return "Shows the help info for /" + root.name();
     }
 

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.musician101"
-version = "1.3.1"
+version = "1.3.2"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -16,7 +16,6 @@ repositories {
     maven("https://libraries.minecraft.net/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    mavenLocal()
 }
 
 dependencies {
