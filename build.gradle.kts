@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.musician101"
-version = "1.3.2"
+version = "1.3.3"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
-    compileOnlyApi("org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("org.jetbrains:annotations:24.0.1")
+    compileOnlyApi("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     compileOnlyApi("com.mojang:brigadier:1.0.18")
 }
 

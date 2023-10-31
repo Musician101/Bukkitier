@@ -5,10 +5,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import java.util.List;
-import javax.annotation.Nonnull;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface that represents a simpler {@link CommandNode}
@@ -18,7 +18,7 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
     /**
      * @return A list of subcommands and arguments.
      */
-    @Nonnull
+    @NotNull
     default List<Command<? extends ArgumentBuilder<CommandSender, ?>>> arguments() {
         return List.of();
     }
@@ -29,7 +29,7 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
      * @param sender The {@link CommandSender} attempting to run the command.
      * @return Whether the {@link CommandSender} can run the command.
      */
-    default boolean canUse(@Nonnull CommandSender sender) {
+    default boolean canUse(@NotNull CommandSender sender) {
         return true;
     }
 
@@ -39,8 +39,8 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
      * @param sender The {@link CommandSender} receiving the description
      * @return A description
      */
-    @Nonnull
-    default String description(@Nonnull CommandSender sender) {
+    @NotNull
+    default String description(@NotNull CommandSender sender) {
         return "";
     }
 
@@ -49,7 +49,7 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
      * @return An integer where anything greater than 0 is usually a successful run of the command.
      * @throws CommandSyntaxException If an error during execution occurs.
      */
-    default int execute(@Nonnull CommandContext<CommandSender> context) throws CommandSyntaxException {
+    default int execute(@NotNull CommandContext<CommandSender> context) throws CommandSyntaxException {
         CommandSender sender = context.getSource();
         sender.sendMessage(ChatColor.RED + "Unknown or incomplete command, see below for error");
         sender.sendMessage(context.getInput() + ChatColor.RED + "<--[HERE]");
@@ -59,19 +59,19 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
     /**
      * @return The name of the argument.
      */
-    @Nonnull
+    @NotNull
     String name();
 
     /**
      * @return A Brigadier representation of the command.
      */
-    @Nonnull
+    @NotNull
     B toBrigadier();
 
     /**
      * @param sender The {@link CommandSender} for checking permissions based usages.
      * @return Usage of the command.
      */
-    @Nonnull
-    String usage(@Nonnull CommandSender sender);
+    @NotNull
+    String usage(@NotNull CommandSender sender);
 }

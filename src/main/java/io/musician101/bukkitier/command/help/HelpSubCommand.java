@@ -13,7 +13,6 @@ import io.musician101.bukkitier.command.Command;
 import io.musician101.bukkitier.command.LiteralCommand;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import javax.annotation.Nonnull;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -24,6 +23,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.CommandSender.Spigot;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import static net.md_5.bungee.api.ChatColor.DARK_GRAY;
 import static net.md_5.bungee.api.ChatColor.DARK_GREEN;
@@ -37,27 +37,27 @@ import static net.md_5.bungee.api.ChatColor.of;
  */
 public abstract class HelpSubCommand extends AbstractHelpCommand {
 
-    @Nonnull
+    @NotNull
     private final LiteralCommand root;
 
     /**
      * @param root   The root {@link LiteralCommand}
      * @param plugin The {@link JavaPlugin} that's registering this command.
      */
-    public HelpSubCommand(@Nonnull LiteralCommand root, @Nonnull JavaPlugin plugin) {
+    public HelpSubCommand(@NotNull LiteralCommand root, @NotNull JavaPlugin plugin) {
         super(plugin);
         this.root = root;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public List<Command<? extends ArgumentBuilder<CommandSender, ?>>> arguments() {
         return List.of(new HelpCommandArgument());
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected TextComponent commandInfo(@Nonnull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @Nonnull CommandSender sender) {
+    protected TextComponent commandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
         TextComponent cmd = new TextComponent(command.usage(sender));
         TextComponent dash = new TextComponent("\n - ");
         dash.setColor(DARK_GRAY);
@@ -69,8 +69,8 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
         return cmd;
     }
 
-    @Nonnull
-    private TextComponent defaultCommandInfo(@Nonnull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @Nonnull CommandSender sender) {
+    @NotNull
+    private TextComponent defaultCommandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
         TextComponent cmd = new TextComponent(command.usage(sender));
         TextComponent dash = new TextComponent(" - ");
         dash.setColor(DARK_GRAY);
@@ -82,14 +82,14 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
         return cmd;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public String description(@Nonnull CommandSender sender) {
+    public String description(@NotNull CommandSender sender) {
         return "Shows the help info for /" + root.name();
     }
 
     @Override
-    public int execute(@Nonnull CommandContext<CommandSender> context) throws CommandSyntaxException {
+    public int execute(@NotNull CommandContext<CommandSender> context) throws CommandSyntaxException {
         CommandSender sender = context.getSource();
         Spigot spigot = sender.spigot();
         spigot.sendMessage(header());
@@ -104,7 +104,7 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
         return 1;
     }
 
-    @Nonnull
+    @NotNull
     protected TextComponent header() {
         PluginDescriptionFile pdf = plugin.getDescription();
         TextComponent begin = new TextComponent("> ===== ");
@@ -129,15 +129,15 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
         return begin;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String name() {
         return "help";
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public String usage(@Nonnull CommandSender sender) {
+    public String usage(@NotNull CommandSender sender) {
         return root.usage(sender) + " help";
     }
 
@@ -159,7 +159,7 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
     class HelpCommandArgument implements ArgumentCommand<Command<? extends ArgumentBuilder<CommandSender, ?>>> {
 
         @Override
-        public int execute(@Nonnull CommandContext<CommandSender> context) {
+        public int execute(@NotNull CommandContext<CommandSender> context) {
             CommandSender sender = context.getSource();
             Spigot spigot = sender.spigot();
             spigot.sendMessage(header());
@@ -168,21 +168,21 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
             return 1;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String name() {
             return "command";
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public ArgumentType<Command<? extends ArgumentBuilder<CommandSender, ?>>> type() {
             return new CommandArgumentType();
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public String usage(@Nonnull CommandSender sender) {
+        public String usage(@NotNull CommandSender sender) {
             return ArgumentCommand.super.usage(sender);
         }
     }

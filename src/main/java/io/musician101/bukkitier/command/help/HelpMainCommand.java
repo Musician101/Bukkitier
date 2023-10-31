@@ -4,7 +4,6 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.musician101.bukkitier.command.Command;
 import java.util.List;
-import javax.annotation.Nonnull;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -15,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.CommandSender.Spigot;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import static net.md_5.bungee.api.ChatColor.DARK_GRAY;
 import static net.md_5.bungee.api.ChatColor.DARK_GREEN;
@@ -28,13 +28,13 @@ import static net.md_5.bungee.api.ChatColor.of;
  */
 public abstract class HelpMainCommand extends AbstractHelpCommand {
 
-    protected HelpMainCommand(@Nonnull JavaPlugin plugin) {
+    protected HelpMainCommand(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected TextComponent commandInfo(@Nonnull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @Nonnull CommandSender sender) {
+    protected TextComponent commandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
         TextComponent cmd = new TextComponent(command.usage(sender));
         TextComponent dash = new TextComponent(" - ");
         dash.setColor(DARK_GRAY);
@@ -46,14 +46,14 @@ public abstract class HelpMainCommand extends AbstractHelpCommand {
         return cmd;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public String description(@Nonnull CommandSender sender) {
+    public String description(@NotNull CommandSender sender) {
         return "Displays help and plugin info.";
     }
 
     @Override
-    public int execute(@Nonnull CommandContext<CommandSender> context) {
+    public int execute(@NotNull CommandContext<CommandSender> context) {
         CommandSender sender = context.getSource();
         Spigot spigot = sender.spigot();
         spigot.sendMessage(header());
@@ -61,7 +61,7 @@ public abstract class HelpMainCommand extends AbstractHelpCommand {
         return 1;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected TextComponent header() {
         PluginDescriptionFile pdf = plugin.getDescription();
@@ -95,9 +95,9 @@ public abstract class HelpMainCommand extends AbstractHelpCommand {
         return true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public String usage(@Nonnull CommandSender sender) {
+    public String usage(@NotNull CommandSender sender) {
         return "/" + name();
     }
 }

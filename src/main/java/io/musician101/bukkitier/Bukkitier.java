@@ -11,12 +11,12 @@ import io.musician101.bukkitier.command.LiteralCommand;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Nonnull;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public final class Bukkitier {
 
@@ -33,7 +33,7 @@ public final class Bukkitier {
      * @param type The name of the command.
      * @return New instance of {@link RequiredArgumentBuilder}
      */
-    public static <T> RequiredArgumentBuilder<CommandSender, T> argument(@Nonnull String name, @Nonnull ArgumentType<T> type) {
+    public static <T> RequiredArgumentBuilder<CommandSender, T> argument(@NotNull String name, @NotNull ArgumentType<T> type) {
         return RequiredArgumentBuilder.argument(name, type);
     }
 
@@ -43,7 +43,7 @@ public final class Bukkitier {
      * @param name The name of the command.
      * @return New instance of {@link LiteralArgumentBuilder}
      */
-    public static LiteralArgumentBuilder<CommandSender> literal(@Nonnull String name) {
+    public static LiteralArgumentBuilder<CommandSender> literal(@NotNull String name) {
         return LiteralArgumentBuilder.literal(name);
     }
 
@@ -55,7 +55,7 @@ public final class Bukkitier {
      * @param plugin  The {@link JavaPlugin} that the command is registered to.
      * @param command The {@link LiteralCommand} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}
      */
-    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralCommand command) {
+    public static void registerCommand(@NotNull JavaPlugin plugin, @NotNull LiteralCommand command) {
         registerCommand(plugin, command.toBrigadier());
     }
 
@@ -68,7 +68,7 @@ public final class Bukkitier {
      * @param builder The {@link LiteralArgumentBuilder<CommandSender>} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}.
      * @param aliases The aliases of the command, if any.
      */
-    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralArgumentBuilder<CommandSender> builder, @Nonnull String... aliases) {
+    public static void registerCommand(@NotNull JavaPlugin plugin, @NotNull LiteralArgumentBuilder<CommandSender> builder, @NotNull String... aliases) {
         registerCommand(plugin, builder, Arrays.asList(aliases));
     }
 
@@ -81,7 +81,7 @@ public final class Bukkitier {
      * @param builder The {@link LiteralArgumentBuilder<CommandSender>} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}.
      * @param aliases The aliases of the command, if any.
      */
-    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralArgumentBuilder<CommandSender> builder, @Nonnull List<String> aliases) {
+    public static void registerCommand(@NotNull JavaPlugin plugin, @NotNull LiteralArgumentBuilder<CommandSender> builder, @NotNull List<String> aliases) {
         PluginCommand pluginCommand = plugin.getCommand(builder.getLiteral());
         if (pluginCommand == null || !plugin.equals(pluginCommand.getPlugin())) {
             throw new NullPointerException(builder.getLiteral() + " is not registered in " + plugin.getName() + "'s plugin.yml");
@@ -119,7 +119,7 @@ public final class Bukkitier {
      * @param command The {@link LiteralCommand} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}
      * @param aliases The aliases for the command
      */
-    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralCommand command, @Nonnull String... aliases) {
+    public static void registerCommand(@NotNull JavaPlugin plugin, @NotNull LiteralCommand command, @NotNull String... aliases) {
         registerCommand(plugin, command.toBrigadier(), aliases);
     }
 
@@ -132,7 +132,7 @@ public final class Bukkitier {
      * @param command The {@link LiteralCommand} that will be passed onto the {@link PluginCommand} as a {@link TabExecutor}
      * @param aliases The aliases for the command
      */
-    public static void registerCommand(@Nonnull JavaPlugin plugin, @Nonnull LiteralCommand command, @Nonnull List<String> aliases) {
+    public static void registerCommand(@NotNull JavaPlugin plugin, @NotNull LiteralCommand command, @NotNull List<String> aliases) {
         registerCommand(plugin, command.toBrigadier(), aliases);
     }
 }
