@@ -18,16 +18,6 @@ public interface LiteralCommand extends Command<LiteralArgumentBuilder<CommandSe
         return false;
     }
 
-    /**
-     * @return The name of the command.
-     * @deprecated Use {@link Command#name()}
-     */
-    @Deprecated(forRemoval = true, since = "1.3.0")
-    @NotNull
-    default String literal() {
-        return name();
-    }
-
     @NotNull
     @Override
     default LiteralArgumentBuilder<CommandSender> toBrigadier() {
