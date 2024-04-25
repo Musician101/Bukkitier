@@ -8,7 +8,6 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
 import io.musician101.bukkitier.command.LiteralCommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -18,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 public final class Bukkitier {
 
@@ -95,7 +96,7 @@ public final class Bukkitier {
                 return DISPATCHER.execute(command.getName() + parsedArgs, sender) > 0;
             }
             catch (CommandSyntaxException e) {
-                sender.sendMessage(ChatColor.RED + e.getMessage());
+                sender.sendMessage(miniMessage().deserialize("<red>" + e.getMessage()));
                 return false;
             }
         });

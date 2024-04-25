@@ -4,12 +4,13 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 /**
  * An interface that represents a simpler {@link CommandNode}
@@ -52,8 +53,7 @@ public interface Command<B extends ArgumentBuilder<CommandSender, B>> {
      */
     default int execute(@NotNull CommandContext<CommandSender> context) throws CommandSyntaxException {
         CommandSender sender = context.getSource();
-        sender.sendMessage(ChatColor.RED + "Unknown or incomplete command, see below for error");
-        sender.sendMessage(context.getInput() + ChatColor.RED + "<--[HERE]");
+        sender.sendMessage(miniMessage().deserialize("<red>Unknown or incomplete command, see below for error<newline>" + context.getInput() + "<--[HERE]"));
         return 1;
     }
 
