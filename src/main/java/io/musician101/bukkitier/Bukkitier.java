@@ -8,9 +8,6 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
 import io.musician101.bukkitier.command.LiteralCommand;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -18,12 +15,15 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public final class Bukkitier {
 
     private static final CommandDispatcher<CommandSender> DISPATCHER = new CommandDispatcher<>();
 
     private Bukkitier() {
-
     }
 
     /**
