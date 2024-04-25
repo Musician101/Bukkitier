@@ -11,26 +11,15 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.musician101.bukkitier.command.ArgumentCommand;
 import io.musician101.bukkitier.command.Command;
 import io.musician101.bukkitier.command.LiteralCommand;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.HoverEvent.Action;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.CommandSender.Spigot;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import static net.md_5.bungee.api.ChatColor.DARK_GRAY;
-import static net.md_5.bungee.api.ChatColor.DARK_GREEN;
-import static net.md_5.bungee.api.ChatColor.GOLD;
-import static net.md_5.bungee.api.ChatColor.GRAY;
-import static net.md_5.bungee.api.ChatColor.GREEN;
-import static net.md_5.bungee.api.ChatColor.of;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 /**
  * A help command set as an argument.
@@ -56,30 +45,9 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
     }
 
     @NotNull
-    @Override
-    protected TextComponent commandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
-        TextComponent cmd = new TextComponent(command.usage(sender));
-        TextComponent dash = new TextComponent("\n - ");
-        dash.setColor(DARK_GRAY);
-        TextComponent description = new TextComponent(command.description(sender));
-        description.setColor(GRAY);
-        cmd.addExtra(dash);
-        cmd.addExtra(description);
-        cmd.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, usage(sender) + " help " + command.name()));
-        return cmd;
-    }
-
-    @NotNull
-    private TextComponent defaultCommandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
-        TextComponent cmd = new TextComponent(command.usage(sender));
-        TextComponent dash = new TextComponent(" - ");
-        dash.setColor(DARK_GRAY);
-        TextComponent description = new TextComponent(command.description(sender));
-        description.setColor(GRAY);
-        cmd.addExtra(dash);
-        cmd.addExtra(description);
-        cmd.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, usage(sender) + " help " + command.name()));
-        return cmd;
+    private Component defaultCommandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
+        String string = command.usage(sender) + "<dark_gray>- <gray><click:run_command:" + usage(sender) + " " + command.name() + ">" + command.description(sender);
+        return miniMessage().deserialize(string);
     }
 
     @NotNull
@@ -90,43 +58,15 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
 
     @Override
     public int execute(@NotNull CommandContext<CommandSender> context) throws CommandSyntaxException {
-        CommandSender sender = context.getSource();
-        Spigot spigot = sender.spigot();
-        spigot.sendMessage(header());
         if (root instanceof HelpMainCommand) {
-            root.execute(context);
-        }
-        else {
-            spigot.sendMessage(defaultCommandInfo(root, sender));
-            arguments().stream().filter(cmd -> cmd.canUse(sender)).forEach(cmd -> spigot.sendMessage(defaultCommandInfo(cmd, sender)));
+            return root.execute(context);
         }
 
+        CommandSender sender = context.getSource();
+        sender.sendMessage(header());
+        sender.sendMessage(defaultCommandInfo(root, sender));
+        arguments().stream().filter(cmd -> cmd.canUse(sender)).forEach(cmd -> sender.sendMessage(defaultCommandInfo(cmd, sender)));
         return 1;
-    }
-
-    @NotNull
-    protected TextComponent header() {
-        PluginDescriptionFile pdf = plugin.getDescription();
-        TextComponent begin = new TextComponent("> ===== ");
-        begin.setColor(DARK_GREEN);
-        TextComponent middle = new TextComponent(pdf.getFullName());
-        middle.setColor(GREEN);
-        TextComponent end = new TextComponent(" ===== <");
-        end.setColor(DARK_GREEN);
-        begin.addExtra(middle);
-        begin.addExtra(end);
-        TextComponent developed = new TextComponent("Developed by ");
-        developed.setColor(GOLD);
-        List<String> authors = pdf.getAuthors();
-        int last = authors.size() - 1;
-        TextComponent authorsComponent = new TextComponent(switch (last) {
-            case 0 -> authors.get(0);
-            case 1 -> String.join(" and ", authors);
-            default -> String.join(", and ", String.join(", ", authors.subList(0, last)), authors.get(last));
-        });
-        authorsComponent.setColor(of("#BDB76B"));
-        begin.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new Text(new BaseComponent[]{developed, authorsComponent})));
-        return begin;
     }
 
     @NotNull
@@ -161,10 +101,9 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
         @Override
         public int execute(@NotNull CommandContext<CommandSender> context) {
             CommandSender sender = context.getSource();
-            Spigot spigot = sender.spigot();
-            spigot.sendMessage(header());
+            sender.sendMessage(header());
             Command<? extends ArgumentBuilder<CommandSender, ?>> command = context.getArgument(name(), Command.class);
-            spigot.sendMessage(commandInfo(command, sender));
+            sender.sendMessage(commandInfo(command, sender));
             return 1;
         }
 
@@ -183,7 +122,7 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
         @NotNull
         @Override
         public String usage(@NotNull CommandSender sender) {
-            return ArgumentCommand.super.usage(sender);
+            return HelpSubCommand.this.usage(sender) + " [command]";
         }
     }
 }
