@@ -45,8 +45,8 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
     }
 
     @NotNull
-    private Component defaultCommandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
-        String string = command.usage(sender) + "<dark_gray>- <gray><click:run_command:" + usage(sender) + " " + command.name() + ">" + command.description(sender);
+    protected Component argumentCommandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
+        String string = "<click:suggest_command:'" + root.usage(sender) + " " + command.name() + "'>" + command.usage(sender) + "<newline><dark_gray> - <gray>" + command.description(sender);
         return miniMessage().deserialize(string);
     }
 
@@ -64,8 +64,8 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
 
         CommandSender sender = context.getSource();
         sender.sendMessage(header());
-        sender.sendMessage(defaultCommandInfo(root, sender));
-        arguments().stream().filter(cmd -> cmd.canUse(sender)).forEach(cmd -> sender.sendMessage(defaultCommandInfo(cmd, sender)));
+        sender.sendMessage(commandInfo(root, sender));
+        arguments().stream().filter(cmd -> cmd.canUse(sender)).forEach(cmd -> sender.sendMessage(commandInfo(cmd, sender)));
         return 1;
     }
 
@@ -78,7 +78,7 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
     @NotNull
     @Override
     public String usage(@NotNull CommandSender sender) {
-        return root.usage(sender) + " help";
+        return root.usage(sender) + " help [<command>]";
     }
 
     class CommandArgumentType implements ArgumentType<Command<? extends ArgumentBuilder<CommandSender, ?>>> {
@@ -98,12 +98,13 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
 
     class HelpCommandArgument implements ArgumentCommand<Command<? extends ArgumentBuilder<CommandSender, ?>>> {
 
+        @SuppressWarnings("unchecked")
         @Override
         public int execute(@NotNull CommandContext<CommandSender> context) {
             CommandSender sender = context.getSource();
             sender.sendMessage(header());
             Command<? extends ArgumentBuilder<CommandSender, ?>> command = context.getArgument(name(), Command.class);
-            sender.sendMessage(commandInfo(command, sender));
+            sender.sendMessage(argumentCommandInfo(command, sender));
             return 1;
         }
 

@@ -24,7 +24,7 @@ abstract class AbstractHelpCommand implements LiteralCommand {
 
     @NotNull
     protected Component commandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
-        String string = command.usage(sender) + "<newline> <dark_gray>- <gray><click:run_command:" + usage(sender) + " " + command.name() + ">" + command.description(sender);
+        String string = "<click:run_command:" + usage(sender) + " help " + command.name() + ">" + usage(sender) + " " + command.name() + " <dark_gray>- <gray>" + command.description(sender);
         return miniMessage().deserialize(string);
     }
 
