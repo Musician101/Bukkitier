@@ -24,8 +24,7 @@ public final class Bukkitier {
 
     private static final CommandDispatcher<CommandSender> DISPATCHER = new CommandDispatcher<>();
 
-    private Bukkitier() {
-    }
+    private Bukkitier() {}
 
     /**
      * Helper method to create a new instance of {@link LiteralArgumentBuilder<CommandSender>}

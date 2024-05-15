@@ -1,15 +1,23 @@
+buildscript {
+    configurations {
+        classpath {
+            resolutionStrategy {
+                force("org.ow2.asm:asm:9.6")
+                force("org.ow2.asm:asm-commons:9.6")
+            }
+        }
+    }
+}
+
 plugins {
     `java-library`
-    java
     `maven-publish`
 }
 
 group = "io.musician101"
-version = "2.0.0"
+version = "2.1.0"
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 repositories {
     mavenCentral()
