@@ -20,8 +20,8 @@ public abstract class AbstractHelpCommand implements LiteralCommand {
     }
 
     @NotNull
-    protected Component commandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
-        return MiniMessage.miniMessage().deserialize("<help_command_info>", TagResolvers.helpCommandInfo(this, command, sender));
+    protected Component commandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> root, @NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
+        return MiniMessage.miniMessage().deserialize("<help_command_info>", TagResolvers.helpCommandInfo(root, command, sender));
     }
 
     @NotNull

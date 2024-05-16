@@ -38,8 +38,7 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
 
         CommandSender sender = context.getSource();
         sender.sendMessage(header());
-        sender.sendMessage(commandInfo(root, sender));
-        arguments().stream().filter(cmd -> cmd.canUse(sender)).forEach(cmd -> sender.sendMessage(commandInfo(cmd, sender)));
+        root.arguments().stream().filter(cmd -> cmd.canUse(sender)).forEach(cmd -> sender.sendMessage(commandInfo(root, cmd, sender)));
         return 1;
     }
 
@@ -52,6 +51,6 @@ public abstract class HelpSubCommand extends AbstractHelpCommand {
     @NotNull
     @Override
     public String usage(@NotNull CommandSender sender) {
-        return root.usage(sender) + " help [<command>]";
+        return root.usage(sender) + " help";
     }
 }

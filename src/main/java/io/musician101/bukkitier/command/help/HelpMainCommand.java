@@ -24,7 +24,7 @@ public abstract class HelpMainCommand extends AbstractHelpCommand {
     public int execute(@NotNull CommandContext<CommandSender> context) {
         CommandSender sender = context.getSource();
         sender.sendMessage(header());
-        arguments().stream().filter(cmd -> cmd.canUse(sender)).forEach(cmd -> sender.sendMessage(commandInfo(cmd, sender)));
+        arguments().stream().filter(cmd -> cmd.canUse(sender)).forEach(cmd -> sender.sendMessage(commandInfo(this, cmd, sender)));
         return 1;
     }
 

@@ -2,7 +2,6 @@ package io.musician101.bukkitier.tagresolver;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import io.musician101.bukkitier.command.Command;
-import io.musician101.bukkitier.command.help.AbstractHelpCommand;
 import io.papermc.paper.plugin.configuration.PluginMeta;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
@@ -53,7 +52,7 @@ public interface TagResolvers {
     }
 
     @NotNull
-    static TagResolver helpCommandInfo(@NotNull AbstractHelpCommand helpCommand, @NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
+    static TagResolver helpCommandInfo(@NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> root, @NotNull Command<? extends ArgumentBuilder<CommandSender, ?>> command, @NotNull CommandSender sender) {
         return TagResolver.resolver("help_command_info", (argumentQueue, context) -> {
             String color1 = "<white>";
             String color2 = "<dark_green>";
@@ -68,7 +67,7 @@ public interface TagResolvers {
                 }
             }
 
-            String string = color1 + helpCommand.usage(sender) + " " + command.name() + color2 + " - " + color3 + command.description(sender);
+            String string = color1 + root.usage(sender) + " " + command.name() + color2 + " - " + color3 + command.description(sender);
             return Tag.selfClosingInserting(MiniMessage.miniMessage().deserialize(string));
         });
     }
