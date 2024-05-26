@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A help command set as an argument.
  */
+@Deprecated
 public abstract class HelpSubCommand extends AbstractHelpCommand {
 
     @NotNull

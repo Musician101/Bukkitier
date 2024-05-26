@@ -8,6 +8,8 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
 import io.musician101.bukkitier.command.LiteralCommand;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -17,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
@@ -24,7 +27,8 @@ public final class Bukkitier {
 
     private static final CommandDispatcher<CommandSender> DISPATCHER = new CommandDispatcher<>();
 
-    private Bukkitier() {}
+    private Bukkitier() {
+    }
 
     /**
      * Helper method to create a new instance of {@link LiteralArgumentBuilder<CommandSender>}
@@ -84,30 +88,59 @@ public final class Bukkitier {
     public static void registerCommand(@NotNull JavaPlugin plugin, @NotNull LiteralArgumentBuilder<CommandSender> builder, @NotNull List<String> aliases) {
         PluginCommand pluginCommand = plugin.getCommand(builder.getLiteral());
         if (pluginCommand == null || !plugin.equals(pluginCommand.getPlugin())) {
-            throw new NullPointerException(builder.getLiteral() + " is not registered in " + plugin.getName() + "'s plugin.yml");
+            if (!Bukkit.getName().equals("Paper")) {
+                throw new NullPointerException(builder.getLiteral() + " is not registered in " + plugin.getName() + "'s plugin.yml");
+            }
+
+            Command command = getCommand(builder, aliases);
+            Bukkit.getCommandMap().register(plugin.getName().toLowerCase(), command);
+        }
+        else {
+            List<String> allAliases = Stream.concat(pluginCommand.getAliases().stream(), aliases.stream()).distinct().toList();
+            pluginCommand.setAliases(allAliases);
+            pluginCommand.setExecutor(Bukkitier::execute);
+            pluginCommand.setTabCompleter(Bukkitier::tabComplete);
         }
 
         DISPATCHER.register(builder);
-        pluginCommand.setAliases(aliases);
-        pluginCommand.setExecutor((sender, command, label, args) -> {
-            try {
-                String parsedArgs = args.length == 0 ? "" : " " + String.join(" ", args);
-                return DISPATCHER.execute(command.getName() + parsedArgs, sender) > 0;
-            }
-            catch (CommandSyntaxException e) {
-                sender.sendMessage(miniMessage().deserialize("<red>" + e.getMessage()));
-                return false;
-            }
-        });
+    }
 
-        pluginCommand.setTabCompleter((sender, command, alias, args) -> {
-            List<String> list = new ArrayList<>();
+    private static Command getCommand(LiteralArgumentBuilder<CommandSender> builder, List<String> aliases) {
+        Command command = new Command(builder.getLiteral()) {
+
+            @Override
+            public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+                return Bukkitier.execute(sender, this, commandLabel, args);
+            }
+
+            @Override
+            public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+                return Bukkitier.tabComplete(sender, this, alias, args);
+            }
+        };
+
+        command.setAliases(aliases);
+        return command;
+    }
+
+    private static boolean execute(CommandSender sender, Command command, String label, String[] args) {
+        try {
             String parsedArgs = args.length == 0 ? "" : " " + String.join(" ", args);
-            String rawCommand = command.getName() + parsedArgs;
-            ParseResults<CommandSender> parseResults = DISPATCHER.parse(rawCommand, sender);
-            DISPATCHER.getCompletionSuggestions(parseResults).thenAccept(suggestions -> suggestions.getList().stream().map(Suggestion::getText).forEach(list::add));
-            return list;
-        });
+            return DISPATCHER.execute(command.getName() + parsedArgs, sender) > 0;
+        }
+        catch (CommandSyntaxException e) {
+            sender.sendMessage(miniMessage().deserialize("<red>" + e.getMessage()));
+            return false;
+        }
+    }
+
+    private static List<String> tabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> list = new ArrayList<>();
+        String parsedArgs = args.length == 0 ? "" : " " + String.join(" ", args);
+        String rawCommand = command.getName() + parsedArgs;
+        ParseResults<CommandSender> parseResults = DISPATCHER.parse(rawCommand, sender);
+        DISPATCHER.getCompletionSuggestions(parseResults).thenAccept(suggestions -> suggestions.getList().stream().map(Suggestion::getText).forEach(list::add));
+        return list;
     }
 
     /**

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A help command set with a customizable name.
  */
+@Deprecated
 public abstract class HelpMainCommand extends AbstractHelpCommand {
 
     protected HelpMainCommand(@NotNull JavaPlugin plugin) {

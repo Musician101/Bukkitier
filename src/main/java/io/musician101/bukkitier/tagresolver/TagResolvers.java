@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Deprecated
 public interface TagResolvers {
 
     @NotNull

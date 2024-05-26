@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public abstract class AbstractHelpCommand implements LiteralCommand {
 
     @NotNull
